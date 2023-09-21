@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lobby and Matchmaking</title>
+    <style>
+        #lobby {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        .room {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="lobby">
+        <h2>Lobby</h2>
+        <button onclick="createRoom()">Create Room</button>
+        <div id="roomList">
+            <!-- Rooms will be displayed here -->
+        </div>
+    </div>
+
+    <div id="matchmaking">
+        <h2>Matchmaking</h2>
+        <button onclick="joinRandomRoom()">Join Random Room</button>
+    </div>
+
+    <script>
+        const rooms = [];
+
+        function createRoom() {
+            const roomName = prompt("Enter Room Name:");
+            if (roomName) {
+                const room = { name: roomName, users: [] };
+                rooms.push(room);
+                displayRooms();
+            }
+        }
+
+        function joinRoom(roomIndex) {
+            const room = rooms[roomIndex];
+            if (room && room.users.length < 2) {
+                const username = prompt("Enter your username:");
+                if (username) {
+                    room.users.push(username);
+                    displayRooms();
+                }
+            }
+        }
+
+        function joinRandomRoom() {
+            for (let i = 0; i < rooms.length; i++) {
+                const room = rooms[i];
+                if (room.users.length < 2) {
+                    const username = prompt("Enter your username:");
+                    if (username) {
+                        room.users.push(username);
+                        displayRooms();
+                        return;
+                    }
+                }
+            }
+            alert("No available rooms. Create a new one.");
+        }
+
+        function displayRooms() {
+            const roomList = document.getElementById("roomList");
+            roomList.innerHTML = "";
+            rooms.forEach((room, index) => {
+                const roomDiv = document.createElement("div");
+                roomDiv.className = "room";
+                roomDiv.innerHTML = `
+                    <strong>${room.name}</strong>
+                    <br>
+                    Users: ${room.users.join(", ")}
+                    <br>
+                    <button onclick="joinRoom(${index})">Join</button>
+                `;
+                roomList.appendChild(roomDiv);
+            });
+        }
+    </script>
+</body>
+</html>
